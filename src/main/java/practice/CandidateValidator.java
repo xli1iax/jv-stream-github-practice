@@ -23,11 +23,11 @@ public class CandidateValidator implements Predicate<Candidate> {
         int start = Integer.parseInt(parts[0]);
         int end = Integer.parseInt(parts[1]);
 
-         if (end < start) {
-             int temp = start;
-             start = end;
-             end = temp;
-         }
+        if (end < start) {
+            int temp = start;
+            start = end;
+            end = temp;
+        }
 
         return end - start >= MIN_STAY_IN_THE_COUNTRY;
     }
