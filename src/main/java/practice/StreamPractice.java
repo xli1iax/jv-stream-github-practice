@@ -1,9 +1,7 @@
 package practice;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import model.Candidate;
 import model.Person;
@@ -17,18 +15,13 @@ public class StreamPractice {
      * "Can't get min value from list: < Here is our input 'numbers' >"
      */
     public int findMinEvenNumber(List<String> numbers) {
-        List<Integer> evens = numbers.stream()
-                .map(s -> s.split(","))
-                .flatMap(Arrays::stream)
+        return numbers.stream()
+                .flatMap(input -> Arrays.stream(input.split(",")))
                 .map(Integer::parseInt)
-                .filter(n -> n % 2 == 0)
-                .collect(Collectors.toList());
-
-        if (evens.isEmpty()) {
-            throw new RuntimeException("Can't get min value from list: " + numbers);
-        }
-
-        return Collections.min(evens);
+                .filter(num -> num % 2 == 0)
+                .min(Integer::compareTo)
+                .orElseThrow(() -> new RuntimeException("Can't get min value from list: "
+                        + numbers));
     }
 
     /**
@@ -56,7 +49,7 @@ public class StreamPractice {
         return peopleList.stream()
                 .filter(p -> p.getSex() == Person.Sex.MAN
                         && (p.getAge() >= fromAge && p.getAge() <= toAge))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     /**
@@ -73,21 +66,9 @@ public class StreamPractice {
                                           int maleToAge, List<Person> peopleList) {
         return peopleList.stream()
                 .filter(p -> hasPersonCorrectAge(p, fromAge, maleToAge, femaleToAge))
-                .collect(Collectors.toList());
+                .toList();
     }
 
-    private boolean hasPersonCorrectAge(Person p, int fromAge, int maleToAge, int femaleToAge) {
-        if (p.getSex() == Person.Sex.MAN && p.getAge() >= fromAge
-                && p.getAge() <= maleToAge) {
-            return true;
-        }
-        if (p.getSex() == Person.Sex.WOMAN && p.getAge() >= fromAge
-                && p.getAge() <= femaleToAge) {
-            return true;
-        }
-
-        return false;
-    }
     /**
      * Given a List of `Person` instances (having `name`, `age`, `sex` and `cats` fields,
      * and each `Cat` having a `name` and `age`),
@@ -97,10 +78,9 @@ public class StreamPractice {
     public List<String> getCatsNames(List<Person> peopleList, int femaleAge) {
         return peopleList.stream()
                 .filter(p -> p.getAge() >= femaleAge && p.getSex() == Person.Sex.WOMAN)
-                .map(p -> p.getCats())
-                .flatMap(c -> c.stream())
+                .flatMap(p -> p.getCats().stream())
                 .map(c -> c.getName())
-                .collect(Collectors.toList());
+                .toList();
     }
 
     /**
@@ -120,6 +100,19 @@ public class StreamPractice {
                 .filter(new CandidateValidator())
                 .map(Candidate::getName)
                 .sorted()
-                .collect(Collectors.toList());
+                .toList();
+    }
+
+    private boolean hasPersonCorrectAge(Person p, int fromAge, int maleToAge, int femaleToAge) {
+        if (p.getSex() == Person.Sex.MAN && p.getAge() >= fromAge
+                && p.getAge() <= maleToAge) {
+            return true;
+        }
+        if (p.getSex() == Person.Sex.WOMAN && p.getAge() >= fromAge
+                && p.getAge() <= femaleToAge) {
+            return true;
+        }
+
+        return false;
     }
 }
