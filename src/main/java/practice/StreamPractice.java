@@ -104,15 +104,7 @@ public class StreamPractice {
     }
 
     private boolean hasPersonCorrectAge(Person p, int fromAge, int maleToAge, int femaleToAge) {
-        if (p.getSex() == Person.Sex.MAN && p.getAge() >= fromAge
-                && p.getAge() <= maleToAge) {
-            return true;
-        }
-        if (p.getSex() == Person.Sex.WOMAN && p.getAge() >= fromAge
-                && p.getAge() <= femaleToAge) {
-            return true;
-        }
-
-        return false;
+        int toAge = p.getSex() == Person.Sex.MAN ? maleToAge : femaleToAge;
+        return p.getAge() >= fromAge && p.getAge() <= toAge;
     }
 }

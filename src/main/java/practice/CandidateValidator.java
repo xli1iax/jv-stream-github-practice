@@ -7,6 +7,7 @@ public class CandidateValidator implements Predicate<Candidate> {
     private static final int MIN_AGE = 35;
     private static final String NATIONALITY = "Ukrainian";
     private static final int MIN_STAY_IN_THE_COUNTRY = 10;
+    private static final String SEPARATOR = "-";
 
     @Override
     public boolean test(Candidate candidate) {
@@ -19,14 +20,12 @@ public class CandidateValidator implements Predicate<Candidate> {
     }
 
     private boolean checkYearsInTheCountry(String period) {
-        String[] parts = period.split("-");
+        String[] parts = period.split(SEPARATOR);
         int start = Integer.parseInt(parts[0]);
         int end = Integer.parseInt(parts[1]);
 
         if (end < start) {
-            int temp = start;
-            start = end;
-            end = temp;
+            throw new IllegalArgumentException("End date must not be before start date");
         }
 
         return end - start >= MIN_STAY_IN_THE_COUNTRY;
